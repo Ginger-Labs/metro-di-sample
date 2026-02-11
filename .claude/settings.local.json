@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(/Users/ryan.shea/.local/bin/claude plugin:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(./gradlew clean:*)",
+      "Bash(./gradlew :ui:compileDebugKotlin:*)",
+      "Bash(tee:*)",
+      "Bash(./gradlew:*)"
+    ]
+  }
+}
