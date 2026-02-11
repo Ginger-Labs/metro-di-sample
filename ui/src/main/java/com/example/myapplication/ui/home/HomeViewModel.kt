@@ -11,8 +11,6 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 @Inject
 @ViewModelKey(HomeViewModel::class)
 @ContributesIntoMap(HomeViewModelScope::class, binding<ViewModel>())
-class HomeViewModel(
-
-) : ViewModel() {
+class HomeViewModel : ViewModel() {
     val name = mutableStateOf("Name")
 }

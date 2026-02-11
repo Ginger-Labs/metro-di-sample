@@ -32,6 +32,7 @@ import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 @ActivityKey(MainActivity::class)
 class MainActivity(
     private val metroVmf: MetroViewModelFactory,
+    private val appGraph: com.example.myapplication.app.di.AppGraph,
 ) : ComponentActivity() {
 
     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
@@ -47,7 +48,10 @@ class MainActivity(
                 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
                 MyApplicationTheme {
                     Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
-                        NavHost(viewModel.stringFlow.collectAsState().value)
+                        NavHost(
+                            name = viewModel.stringFlow.collectAsState().value,
+                            appGraph = appGraph
+                        )
                     }
                 }
             }

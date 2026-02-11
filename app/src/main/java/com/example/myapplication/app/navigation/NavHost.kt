@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -20,11 +22,15 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.example.myapplication.ui.home.HomeScreen
+import com.example.myapplication.ui.viewmodel.HomeViewModelGraph
+import dev.zacsweers.metro.asContribution
+import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import kotlinx.serialization.Serializable
 
 @Composable
 internal fun NavHost(
     name: String,
+    appGraph: com.example.myapplication.app.di.AppGraph,
     modifier: Modifier = Modifier,
 ) {
     val backStack = rememberNavBackStack(LoadingRoute)
@@ -56,7 +62,14 @@ internal fun NavHost(
                     }
                 }
                 entry<HomeRoute> {
-                    HomeScreen(appName = name)
+                    // Create the scoped HomeViewModelGraph using the contributed factory
+                    val homeViewModelGraph = remember(appGraph) {
+                        val factory = appGraph.asContribution<HomeViewModelGraph.Factory>()
+                        // Create with default/empty CreationExtras since we don't need runtime params
+                        factory.createHomeViewModelGraph(androidx.lifecycle.viewmodel.CreationExtras.Empty)
+                    }
+
+                    HomeScreen(appName = name, homeViewModelGraph = homeViewModelGraph)
                 }
             },
         predictivePopTransitionSpec = {
