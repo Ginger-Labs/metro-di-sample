@@ -23,6 +23,7 @@ import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.viewmodel.HomeViewModelGraph
+import com.example.myapplication.ui.viewmodel.asMetroViewModelFactory
 import dev.zacsweers.metro.asContribution
 import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import kotlinx.serialization.Serializable
@@ -69,7 +70,17 @@ internal fun NavHost(
                         factory.createHomeViewModelGraph(androidx.lifecycle.viewmodel.CreationExtras.Empty)
                     }
 
-                    HomeScreen(appName = name, homeViewModelGraph = homeViewModelGraph)
+                    // Convert to MetroViewModelFactory and provide via LocalMetroViewModelFactory
+                    // This makes metroViewModel() automatically work for ViewModels in HomeViewModelScope
+                    val metroFactory = remember(homeViewModelGraph) {
+                        homeViewModelGraph.asMetroViewModelFactory()
+                    }
+
+                    androidx.compose.runtime.CompositionLocalProvider(
+                        LocalMetroViewModelFactory provides metroFactory
+                    ) {
+                        HomeScreen(appName = name)
+                    }
                 }
             },
         predictivePopTransitionSpec = {

@@ -7,6 +7,9 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
+import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelGraph
 import kotlin.reflect.KClass
 
@@ -26,3 +29,18 @@ interface HomeViewModelGraph : ViewModelGraph {
 }
 
 data object HomeViewModelScope
+
+/**
+ * Creates a MetroViewModelFactory from this ViewModelGraph.
+ * This allows the graph to be used with LocalMetroViewModelFactory and metroViewModel().
+ */
+fun HomeViewModelGraph.asMetroViewModelFactory(): MetroViewModelFactory {
+    return object : MetroViewModelFactory() {
+        override val viewModelProviders: Map<KClass<out ViewModel>, Provider<ViewModel>>
+            get() = this@asMetroViewModelFactory.viewModelProviders
+        override val assistedFactoryProviders: Map<KClass<out ViewModel>, Provider<ViewModelAssistedFactory>>
+            get() = emptyMap()
+        override val manualAssistedFactoryProviders: Map<KClass<out ManualViewModelAssistedFactory>, Provider<ManualViewModelAssistedFactory>>
+            get() = emptyMap()
+    }
+}
