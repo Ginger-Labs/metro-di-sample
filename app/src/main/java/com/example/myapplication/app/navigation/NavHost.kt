@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,12 +21,15 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.example.myapplication.ui.home.HomeScreen
+import com.example.myapplication.ui.viewmodel.MetroHomeViewModelFactory
+import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import kotlinx.serialization.Serializable
 
 @Composable
 internal fun NavHost(
     name: String,
     modifier: Modifier = Modifier,
+    homeViewModelFactory: MetroHomeViewModelFactory
 ) {
     val backStack = rememberNavBackStack(LoadingRoute)
 
@@ -56,8 +60,11 @@ internal fun NavHost(
                     }
                 }
                 entry<HomeRoute> {
-                    HomeScreen(appName = name)
-                }
+                    CompositionLocalProvider(
+                        LocalMetroViewModelFactory provides homeViewModelFactory
+                    ) {
+                        HomeScreen(appName = name)
+                    }                }
             },
         predictivePopTransitionSpec = {
             ContentTransform(

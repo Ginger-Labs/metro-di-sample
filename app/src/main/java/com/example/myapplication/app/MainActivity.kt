@@ -19,6 +19,7 @@ import com.example.myapplication.app.ui.theme.MyApplicationTheme
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.app.navigation.NavHost
+import com.example.myapplication.ui.viewmodel.HomeViewModelGraph
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -32,6 +33,7 @@ import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 @ActivityKey(MainActivity::class)
 class MainActivity(
     private val metroVmf: MetroViewModelFactory,
+    private val homeGraph: HomeViewModelGraph
 ) : ComponentActivity() {
 
     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
@@ -47,7 +49,10 @@ class MainActivity(
                 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
                 MyApplicationTheme {
                     Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
-                        NavHost(viewModel.stringFlow.collectAsState().value)
+                        NavHost(
+                            viewModel.stringFlow.collectAsState().value,
+                            homeViewModelFactory = homeGraph.homeViewModelFactory,
+                        )
                     }
                 }
             }

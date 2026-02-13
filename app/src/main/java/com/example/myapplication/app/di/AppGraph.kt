@@ -2,6 +2,7 @@ package com.example.myapplication.app.di
 
 import android.content.Context
 import com.example.myapplication.data.di.ApplicationContext
+import com.example.myapplication.ui.viewmodel.HomeViewModelGraph
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
@@ -12,6 +13,8 @@ import dev.zacsweers.metrox.viewmodel.ViewModelGraph
 interface AppGraph : MetroAppComponentProviders, ViewModelGraph {
 
     val metroActivityViewModelFactory: MetroActivityViewModelFactory
+
+    val homeViewModelGraph: HomeViewModelGraph
 
     @DependencyGraph.Factory
     interface Factory {
